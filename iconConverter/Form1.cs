@@ -39,14 +39,20 @@ namespace iconConverter
         private void BuildUI()
         {
             Text = "ICO 多サイズ同梱 出力ツール";
-            Width = 900;
-            Height = 600;
+            Width = 930;
+            Height = 680;
             StartPosition = FormStartPosition.CenterScreen;
             this.Padding = new Padding(8, 18, 8, 8);
 
             // ヘッダ
             var header = new Panel { Dock = DockStyle.Top, Height = 88 };
-            var title = new Label { Text = "画像をドラッグ＆ドロップ。拡大はしない／縮小のみで各枠に割当。", Dock = DockStyle.Top, Height = 22 };
+            var title = new Label
+            {
+                // 追記: 既登録がある場合の保持ルール
+                Text = "画像をドラッグ＆ドロップ。拡大はしない／縮小のみで各枠に割当。既に登録してる画像がある場合、その画像より大きい場合は削除しない。",
+                Dock = DockStyle.Top,
+                Height = 36
+            };
             lblStatus = new Label { Text = "未読込", Dock = DockStyle.Top, Height = 18 };
 
             var ops = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
@@ -84,8 +90,13 @@ namespace iconConverter
             scroll.Resize += delegate { LayoutGrid(); };
             Controls.Add(scroll);
 
-            // フッタ
-            var footer = new Label { Text = "チェックされたサイズのみを1つのICOに同梱（PNG-in-ICO）。", Dock = DockStyle.Bottom, Height = 20 };
+            // フッタ（対応フォーマット表記を追記）
+            var footer = new Label
+            {
+                Text = "チェックされたサイズのみを1つのICOに同梱（PNG-in-ICO）。対応: PNG / BMP / GIF / TIFF / JPG / JPEG / TGA / ICO",
+                Dock = DockStyle.Bottom,
+                Height = 20
+            };
             Controls.Add(footer);
 
             // 初期配置
@@ -231,6 +242,7 @@ namespace iconConverter
                         assigned[s] = newBmp;
                     }
                 }
+                // minSide < s の場合は既存を保持
             }
         }
 
